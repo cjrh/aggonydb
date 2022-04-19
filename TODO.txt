@@ -1,0 +1,4 @@
+- Write the SQL to do the join across fields, aka "filters"
+- Needs to do the inclusion-exclusion using the sum of cards
+  minus the union of all cards.
+- Write the endpoint for that.

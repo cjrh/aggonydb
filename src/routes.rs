@@ -78,8 +78,17 @@ pub async fn get_field_count(
     path: web::Path<(String, String, String)>,
 ) -> impl Responder {
     let path = path.into_inner();
-    let (dataset, field_name, value) = path;
+    let (dataset, field_name) = path;
     let pool = pool.lock().unwrap();
+    // TODO: this doesn't work yet. What we want is to
+    //  execute a query that returns the counts for each
+    //  value in the given field, and then return the result
+    //  as a vector of objects. Each object should have a "value"
+    //  attribute, and a "count" attribute.
+    //  It may actually be better for each object to also
+    //  include the "field_name" attribute, because this same
+    //  structure generalises for when multiple fields might
+    //  be requested in a similar endpoint to this one.
     let result = count(&pool, &dataset, &field_name, &value).await.unwrap();
     HttpResponse::Ok().body(format!("{}", result))
 }
