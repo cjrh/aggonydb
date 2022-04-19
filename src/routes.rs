@@ -71,3 +71,15 @@ pub async fn get_value_count(
     let result = count(&pool, &dataset, &field_name, &value).await.unwrap();
     HttpResponse::Ok().body(format!("{}", result))
 }
+
+#[get("counts/{dataset}/{field}")]
+pub async fn get_field_count(
+    pool: web::Data<Arc<Mutex<MyPool>>>,
+    path: web::Path<(String, String, String)>,
+) -> impl Responder {
+    let path = path.into_inner();
+    let (dataset, field_name, value) = path;
+    let pool = pool.lock().unwrap();
+    let result = count(&pool, &dataset, &field_name, &value).await.unwrap();
+    HttpResponse::Ok().body(format!("{}", result))
+}
