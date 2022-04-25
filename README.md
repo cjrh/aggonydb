@@ -179,22 +179,22 @@ Notes:
 
 ## TODO:
 
-- [] more examples in README showing multiple filters
-- [] more test cases for empty sets
-- [] make tests actually runnable in github ci (will have to run the PG container)
-- [] make a "batch" endpoint for receiving larger chunks of data
-- [] make an endpoint for receiving serialized theta sketches. The Python
+- [ ] more examples in README showing multiple filters
+- [ ] more test cases for empty sets
+- [ ] make tests actually runnable in github ci (will have to run the PG container)
+- [ ] make a "batch" endpoint for receiving larger chunks of data
+- [ ] make an endpoint for receiving serialized theta sketches. The Python
   datasketches library can produce serialized theta sketches that are byte
   compatible with what is stored here.
-- [] contemplate an additional API that can save sketches alongside a date
+- [ ] contemplate an additional API that can save sketches alongside a date
   field. It could be very useful for producing trends.
-- [] contemplate extracting a domain_key out of the supplied `add` fields,
+- [ ] contemplate extracting a domain_key out of the supplied `add` fields,
   rather than requiring it to be specified separately. Perhaps the name of
   the field can be specified separately.  Not sure how I feel about this,
   more magic probably helps nobody in the long run.
-- [] investigate doing more sketch stuff in rust space rather than in DB. More
+- [ ] investigate doing more sketch stuff in rust space rather than in DB. More
   of a scaling thing.
-- [] investigate using postgres partitions for easily "ageing out" old sketches.
+- [ ] investigate using postgres partitions for easily "ageing out" old sketches.
   I read a blog about something like this but I can't remember where that was
   right now.
-- [] Add links and reading material to this README.
+- [ ] Add links and reading material to this README.
