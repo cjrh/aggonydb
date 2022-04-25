@@ -14,7 +14,7 @@ Say you have spreadsheet-like data:
 | 4   | gina                    | 30  | London   |                     |
 | ... | ...another million rows | ... | ...      |                     |
 
-Then you can to analyze it, specifically with aggregation. For example
+Then you want to analyze it, specifically with *filtering + aggregation*. For example
 you want to answer the following questions:
 
 - _How many people called `gina` are in `London`?_
