@@ -93,11 +93,8 @@ pub async fn filter_count(
     let dataset = path.0;
     println!("{}", dataset);
     let pool = pool.lock().unwrap();
-    // let result = count(&pool, &dataset, &field_name, &value).await.unwrap();
     let result = schema::count_filter(&pool, &dataset, &filters.items)
         .await
         .unwrap();
-    // let result = 0.0;
     Ok(web::Json(result))
-    // HttpResponse::Ok().body(format!("{:?}", result))
 }
