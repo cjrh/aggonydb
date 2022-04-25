@@ -1,7 +1,7 @@
 use crate::db::MyPool;
 use anyhow::Result;
 use log::*;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, sqlx::FromRow)]
 pub struct Dataset {
@@ -191,11 +191,28 @@ impl Filter {
     }
 }
 
+#[derive(Serialize, Deserialize, PartialEq, PartialOrd, Debug)]
+pub struct FilterResult {
+    pub estimate: f64,
+    pub lower_bound: f64,
+    pub upper_bound: f64,
+}
+
+impl FilterResult {
+    pub fn new(values: &[f64]) -> Self {
+        FilterResult {
+            estimate: values[0],
+            lower_bound: values[1],
+            upper_bound: values[2],
+        }
+    }
+}
+
 pub async fn count_filter(
     pool: &MyPool,
     dataset: &str,
     filters: &[Filter],
-) -> Result<Vec<f64>> {
+) -> Result<FilterResult> {
     let mut fragments = vec![];
     let mut params = vec![];
     let mut i = 2;
@@ -243,7 +260,7 @@ pub async fn count_filter(
     };
     info!("{:?}", result);
 
-    Ok(result)
+    Ok(FilterResult::new(&result))
 }
 
 #[cfg(test)]

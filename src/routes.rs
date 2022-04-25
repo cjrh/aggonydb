@@ -33,18 +33,19 @@ use std::sync::{Arc, Mutex};
 
 #[derive(Deserialize, Debug)]
 pub struct AddPayload {
-    dataset: String,
     fields: HashMap<String, Value>,
+    domain_key: u32,
 }
 
-#[post("/add")]
+#[post("/add/{dataset}")]
 pub async fn add(
     pool: web::Data<Arc<Mutex<MyPool>>>,
     body: web::Json<AddPayload>,
+    path: web::Path<(String,)>,
 ) -> impl Responder {
     let pool = pool.lock().unwrap();
-    let dataset_id =
-        add_dataset_if_missing(&pool, &body.dataset).await.unwrap();
+    let dataset = path.into_inner().0;
+    let dataset_id = add_dataset_if_missing(&pool, &dataset).await.unwrap();
     log::debug!("Dataset id: {}", dataset_id);
 
     log::debug!("{:?}", body.fields);
@@ -56,7 +57,9 @@ pub async fn add(
             Value::Float(x) => format!("{}", x),
             Value::Str(x) => format!("{}", x),
         };
-        add_event(&pool, dataset_id, k, &vs, 1).await.unwrap();
+        add_event(&pool, dataset_id, k, &vs, body.domain_key)
+            .await
+            .unwrap();
     }
 
     HttpResponse::Ok().body("ok")
@@ -84,7 +87,7 @@ pub async fn filter_count(
     filters: web::Json<FilterRequest>,
     pool: web::Data<Arc<Mutex<MyPool>>>,
     path: web::Path<(String,)>,
-) -> impl Responder {
+) -> actix_web::Result<impl Responder> {
     println!("{:?}", filters);
     let path = path.into_inner();
     let dataset = path.0;
@@ -95,5 +98,6 @@ pub async fn filter_count(
         .await
         .unwrap();
     // let result = 0.0;
-    HttpResponse::Ok().body(format!("{:?}", result))
+    Ok(web::Json(result))
+    // HttpResponse::Ok().body(format!("{:?}", result))
 }

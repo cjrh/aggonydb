@@ -113,7 +113,7 @@ async fn intersection(#[future] pool: MyPool) -> Result<()> {
     )
     .await?;
     println!("{count:?}");
-    assert_eq!(count, vec![5.0, 5.0, 5.0]);
+    assert_eq!(count, schema::FilterResult::new(&vec![5.0, 5.0, 5.0]));
 
     // Check the counts for some combinations of filters
     let count = schema::count_filter(
@@ -123,7 +123,7 @@ async fn intersection(#[future] pool: MyPool) -> Result<()> {
     )
     .await?;
     println!("{count:?}");
-    assert_eq!(count, vec![10.0, 10.0, 10.0]);
+    assert_eq!(count, schema::FilterResult::new(&vec![10.0, 10.0, 10.0]));
 
     // Check the counts for some combinations of filters
     let count = schema::count_filter(
@@ -133,7 +133,7 @@ async fn intersection(#[future] pool: MyPool) -> Result<()> {
     )
     .await?;
     println!("{count:?}");
-    assert_eq!(count, vec![5.0, 5.0, 5.0]);
+    assert_eq!(count, schema::FilterResult::new(&vec![5.0, 5.0, 5.0]));
 
     schema::remove_dataset(&p, did).await?;
     Ok(())
