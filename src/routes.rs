@@ -1,6 +1,6 @@
 use crate::db::MyPool;
 use crate::schema::{add_dataset_if_missing, add_event, count};
-use actix_web::{get, post, web, HttpResponse, Responder};
+use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder};
 use log;
 use serde::Deserialize;
 
@@ -27,6 +27,7 @@ enum Value {
     Str(String),
 }
 
+use crate::schema;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
@@ -73,23 +74,26 @@ pub async fn get_value_count(
     HttpResponse::Ok().body(format!("{}", result))
 }
 
-// #[get("counts/{dataset}/{field}")]
-// pub async fn get_field_count(
-//     pool: web::Data<Arc<Mutex<MyPool>>>,
-//     path: web::Path<(String, String, String)>,
-// ) -> impl Responder {
-//     let path = path.into_inner();
-//     let (dataset, field_name) = path;
-//     let pool = pool.lock().unwrap();
-//     // TODO: this doesn't work yet. What we want is to
-//     //  execute a query that returns the counts for each
-//     //  value in the given field, and then return the result
-//     //  as a vector of objects. Each object should have a "value"
-//     //  attribute, and a "count" attribute.
-//     //  It may actually be better for each object to also
-//     //  include the "field_name" attribute, because this same
-//     //  structure generalises for when multiple fields might
-//     //  be requested in a similar endpoint to this one.
-//     let result = count(&pool, &dataset, &field_name, &value).await.unwrap();
-//     HttpResponse::Ok().body(format!("{}", result))
-// }
+#[derive(Deserialize, Debug)]
+struct FilterRequest {
+    items: Vec<schema::Filter>,
+}
+
+#[post("filter/{dataset}")]
+pub async fn filter_count(
+    filters: web::Json<FilterRequest>,
+    pool: web::Data<Arc<Mutex<MyPool>>>,
+    path: web::Path<(String,)>,
+) -> impl Responder {
+    println!("{:?}", filters);
+    let path = path.into_inner();
+    let dataset = path.0;
+    println!("{}", dataset);
+    let pool = pool.lock().unwrap();
+    // let result = count(&pool, &dataset, &field_name, &value).await.unwrap();
+    let result = schema::count_filter(&pool, &dataset, &filters.items)
+        .await
+        .unwrap();
+    // let result = 0.0;
+    HttpResponse::Ok().body(format!("{:?}", result))
+}

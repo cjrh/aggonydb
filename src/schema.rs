@@ -1,6 +1,7 @@
 use crate::db::MyPool;
 use anyhow::Result;
 use log::*;
+use serde::Deserialize;
 
 #[derive(Debug, sqlx::FromRow)]
 pub struct Dataset {
@@ -175,6 +176,7 @@ pub async fn count(
     Ok(result)
 }
 
+#[derive(Deserialize, Debug)]
 pub struct Filter {
     pub field_name: String,
     pub value: String,
