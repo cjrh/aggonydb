@@ -3,12 +3,12 @@ version: '3.1'
 services:
   database:
     build:
-      context: .
-      dockerfile: pg.Dockerfile
-    image: 'pg:14.2-bullseye'
+      context: ../datasketches-postgresql
+      dockerfile: Dockerfile
+    image: 'datasketch-postgres:latest'
 
     ports:
-      - 55432:5432
+      - "55432:5432"
 
     environment:
       POSTGRES_USER: admin
@@ -18,6 +18,6 @@ services:
 #  volumes:
 #    # In this example, we share the folder `db-data` in our root repository, with the default PostgreSQL data path
 #    # It means that every time the repository is modifying the data inside
-#    # of `/var/lib/postgresql/data/`, automatically the change will appear in `db-data`
+#    # `/var/lib/postgresql/data/`, automatically the change will appear in `db-data`
 #    # You don't need to create the `db-data` folder. Docker Compose will do it for you
 #      - ./db-data/:/var/lib/postgresql/data/
