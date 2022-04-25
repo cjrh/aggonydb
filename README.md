@@ -158,10 +158,6 @@ Now let's do a count:
 
 ```shell
 $ http post localhost:8080/filter/demo items:='[{"field_name": "name", "value": "gina"}]'
-HTTP/1.1 200 OK
-content-length: 52
-content-type: application/json
-date: Mon, 25 Apr 2022 03:16:34 GMT
 
 {
     "estimate": 3.0,
